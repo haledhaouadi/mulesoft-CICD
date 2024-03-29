@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="interface-test-suite.xml" />
+	<munit:test name="interface-test-suite-delete:\flights\(ID):american-flights-api-configTest" doc:id="e6746a7e-8716-4e97-aa82-607b95c6f595" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to delete:\flights\(ID):american-flights-api-config" doc:id="ec0b6fa7-1ce0-4488-a426-f6c8aa9a1eca" name="delete:\flights\(ID):american-flights-api-config"/>
+		</munit:execution>
+		<munit:validation >
+
+			   <munit-tools:assert-that 
+
+            doc:name="Assert Response Payload"
+
+            expression="#[output application/json --- payload]"
+
+            is="#[MunitTools::equalTo({
+
+                message: 'Flight deleted (but not really)'
+
+            })]"
+
+            message="La réponse ne correspond pas au JSON attendu"
+
+        />
+
+		</munit:validation>
+	</munit:test>
+	<munit:test name="interface-test-suite-put:\flights\(ID):application\json:american-flights-api-configTest" doc:id="a22ffb76-3666-428d-85aa-dfa549f094de" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to put:\flights\(ID):application\json:american-flights-api-config" doc:id="741c6a5b-8c45-42ea-a100-7c1310bf9524" name="put:\flights\(ID):application\json:american-flights-api-config"/>
+		</munit:execution>
+		<munit:validation >
+
+			   <munit-tools:assert-that 
+
+            doc:name="Assert Response Payload"
+
+            expression="#[output application/json --- payload]"
+
+            is="#[MunitTools::equalTo({
+
+                message: 'Flight updated (but not really)'
+
+            })]"
+
+            message="La réponse ne correspond pas au JSON attendu"
+
+        />
+
+		</munit:validation>
+	</munit:test>
+	<munit:test name="interface-test-suite-post:\flights:application\json:american-flights-api-configTest" doc:id="d90aa95f-1282-46d1-851e-2aa35083a4b7" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\flights:application\json:american-flights-api-config" doc:id="05e4e6c2-06e6-4978-936c-586f672b5189" name="post:\flights:application\json:american-flights-api-config"/>
+		</munit:execution>
+		<munit:validation >
+
+			   <munit-tools:assert-that 
+
+            doc:name="Assert Response Payload"
+
+            expression="#[output application/json --- payload]"
+
+            is="#[MunitTools::equalTo({
+
+                message: 'Flight added (but not really)'
+
+            })]"
+
+            message="La réponse ne correspond pas au JSON attendu"
+
+        />
+        </munit:validation>
+	</munit:test>
+
+
+</mule>

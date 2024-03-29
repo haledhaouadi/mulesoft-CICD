@@ -15,6 +15,7 @@
 
 		<app.runtime>4.5.3</app.runtime>
 		<mule.maven.plugin.version>4.0.0</mule.maven.plugin.version>
+		<munit.version>3.0.0</munit.version>
 	</properties>
 
 	<build>
@@ -30,6 +31,17 @@
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
+				<cloudHubDeployment>
+						<uri>https://anypoint.mulesoft.com</uri>
+						<muleVersion>${app.runtime}</muleVersion>
+						<server>central</server>
+						<applicationName>${appName}</applicationName>
+						<environment>Sandbox</environment>
+						<workerType>Micro</workerType>
+						<workers>1</workers>
+						<objectStoreV2>true</objectStoreV2>
+					</cloudHubDeployment>
+				
 					<sharedLibraries>
 						<sharedLibrary>
 							<groupId>mysql</groupId>
@@ -42,6 +54,39 @@
 					</sharedLibraries>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.mulesoft.munit.tools</groupId>
+				<artifactId>munit-maven-plugin</artifactId>
+				<version>${munit.version}</version>
+				<executions>
+					<execution>
+						<id>test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+							<goal>coverage-report</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<coverage>
+						<runCoverage>true</runCoverage>
+						<formats>
+							<format>html</format>
+						</formats>
+					</coverage>
+				</configuration>
+			</plugin>
+			 <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version>
+            <configuration>
+                <skipTests>true</skipTests>
+                </configuration> 
+           
+        </plugin>
+			
 		</plugins>
 	</build>
 
@@ -86,6 +131,26 @@
 			<version>1.0.2</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
+		</dependency>
+		<dependency>
+			<groupId>com.mulesoft.munit</groupId>
+			<artifactId>munit-runner</artifactId>
+			<version>3.0.0</version>
+			<classifier>mule-plugin</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.mulesoft.munit</groupId>
+			<artifactId>munit-tools</artifactId>
+			<version>3.0.0</version>
+			<classifier>mule-plugin</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.weave</groupId>
+			<artifactId>assertions</artifactId>
+			<version>1.2.1</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
