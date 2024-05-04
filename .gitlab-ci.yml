@@ -13,12 +13,62 @@ stages:
   - sonarqube-check
   - test
   - deploy
+.envoi-splunk: &envoi-splunk
+  after_script:
+    - |
+      if ($CI_JOB_STATUS -eq "failed") {
+        $errorExceptionLogs = Get-Content $env:LOG_FILE_PATH | Select-String -Pattern "^\[ERROR\].*Exception:" | ForEach-Object { $_.Line }
+        $errorFailedLogs = Get-Content $env:LOG_FILE_PATH | Select-String -Pattern "^\[ERROR\] Failed to execute goal" | ForEach-Object { $_.Line }
+        $allErrorLogs = $errorFailedLogs + $errorExceptionLogs
+        $message = $allErrorLogs -join "`n"
+
+        $body = @{
+          sourcetype = "_json"
+          event = @{
+            errorlogs = $message
+            repository = $CI_PROJECT_NAME
+            runner = $CI_RUNNER_ID
+            branch = $CI_COMMIT_REF_NAME
+            stage = "$CI_JOB_STAGE"
+            status = "$CI_JOB_STATUS"
+          }
+        } | ConvertTo-Json -Compress
+        $headers = @{
+          "Authorization" = "Splunk $SPLUNK_HEC_TOKEN"
+        }
+        [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
+        Invoke-RestMethod -Uri $SPLUNK_HEC_ENDPOINT -Method Post -Body $body -Headers $headers -ContentType 'application/json'
+      }
+      else {
+        $body = @{
+          sourcetype = "_json"
+          event = @{
+            repository = $CI_PROJECT_NAME
+            branch = $CI_COMMIT_REF_NAME
+            stage = "$CI_JOB_STAGE"
+            status = "$CI_JOB_STATUS"
+          }
+        } | ConvertTo-Json -Compress
+        $headers = @{
+          "Authorization" = "Splunk $SPLUNK_HEC_TOKEN"
+        }
+        [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
+        Invoke-RestMethod -Uri $SPLUNK_HEC_ENDPOINT -Method Post -Body $body -Headers $headers -ContentType 'application/json'
+      }
+
 
 build:
   stage: build
   
   script:
-    - mvn clean package -DskipTests
+    - mvn clean package -DskipTests | tee build.log
+  artifacts:
+    paths:
+      - build.log
+  variables:
+    LOG_FILE_PATH: "build.log"
+  <<: *envoi-splunk  
+  
 
 sonarqube-check:
   stage: sonarqube-check
@@ -26,6 +76,13 @@ sonarqube-check:
  
  
   script:
-  - mvn sonar:sonar  -DskipTests
+  - mvn sonar:sonar  -DskipTests | tee sonar.log
+  artifacts:
+    paths:
+      - sonar.log
+  variables:
+    LOG_FILE_PATH: "sonar.log"
+  <<: *envoi-splunk
+
 
 
