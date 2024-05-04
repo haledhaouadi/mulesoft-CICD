@@ -8,7 +8,7 @@ before_script:
   - $Env:PATH = "$Env:MAVEN_HOME\bin;" + $Env:PATH
   - echo $Env:PATH
   - mvn -v
-stages:
+stages: 
   - build
   - sonarqube-check
   - test
