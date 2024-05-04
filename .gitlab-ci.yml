@@ -1,4 +1,4 @@
-image: maven:3.8.2-jdk-8
+image: maven:3.8.3-jdk-11
 stages:
   - build
   - sonarqube-check 
