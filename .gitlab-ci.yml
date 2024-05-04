@@ -4,9 +4,10 @@ variables:
 
 before_script:
   - echo "Checking Maven and Java"
+  - $Env:PATH = "$Env:MAVEN_HOME\bin;" + $Env:PATH
   - echo $Env:PATH
-  - echo $Env:MAVEN_HOME
   - mvn -v
+
 stages:
   - build
   - sonarqube-check
@@ -17,4 +18,5 @@ build:
   stage: build
   script:
     - mvn clean package -DskipTests
+
 
