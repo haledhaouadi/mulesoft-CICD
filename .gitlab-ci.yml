@@ -1,12 +1,4 @@
-variables:
-  MAVEN_HOME: 'C:\\Users\\HP\\Downloads\\apache-maven-3.9.6'
 
-
-before_script:
-  - echo "Checking Maven and Java"
-  - $Env:PATH = "$Env:MAVEN_HOME\bin;" + $Env:PATH
-  - echo $Env:PATH
-  - mvn -v
 
 stages:
   - build
@@ -16,6 +8,7 @@ stages:
 
 build:
   stage: build
+  image: maven:3.8.3-jdk-11
   script:
     - mvn clean package -DskipTests
 
