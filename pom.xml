@@ -40,12 +40,15 @@
 				<cloudHubDeployment>
 						<uri>https://anypoint.mulesoft.com</uri>
 						<muleVersion>${app.runtime}</muleVersion>
-						<server>central</server>
-						<applicationName>${appName}</applicationName>
+						
+						<applicationName>${project.artifactId}</applicationName>
 						<environment>Sandbox</environment>
 						<workerType>Micro</workerType>
 						<workers>1</workers>
 						<objectStoreV2>true</objectStoreV2>
+						<connectedAppClientId>4ddb09be53a447d18ea5021f3ffbf222</connectedAppClientId>
+                <connectedAppClientSecret>2adAc8b1E7d6477Ba000d17781AaEaaf</connectedAppClientSecret>
+                <connectedAppGrantType>client_credentials</connectedAppGrantType>
 					</cloudHubDeployment>
 				
 					<sharedLibraries>
