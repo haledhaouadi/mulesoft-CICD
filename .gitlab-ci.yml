@@ -86,7 +86,7 @@ sonarqube-check:
 deploy_develop:
   stage: deploy
   script:
-    - mvn -s $CI_PROJECT_DIR/ci-settings.xml  clean deploy -X -DmuleDeploy  -DskipTests | tee deploy.log
+    - mvn -s $CI_PROJECT_DIR/ci-settings.xml  clean deploy -X -DmuleDeploy  -Denv=Sandbox  -DskipTests | tee deploy.log
   artifacts:
     paths:
       - deploy.log
