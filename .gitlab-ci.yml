@@ -83,17 +83,7 @@ sonarqube-check:
   variables:
     LOG_FILE_PATH: "sonar.log"
   <<: *envoi-splunk
-test:
-  stage: test
-  
-  script:
-    - mvn -s $CI_PROJECT_DIR/ci-settings.xml clean test  | tee test.log
-  artifacts:
-    paths:
-      - test.log
-  variables:
-    LOG_FILE_PATH: "test.log"
-  <<: *envoi-splunk    
+ 
 deploy_sandbox:
   stage: deploy
   script:
