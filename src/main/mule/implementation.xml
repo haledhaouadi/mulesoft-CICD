@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+          http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+          http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+          http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd"
+>
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="4b43ab68-dcb4-4612-95d7-8e62be637065" >
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
@@ -20,26 +21,21 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 			<db:sql ><![CDATA[SELECT * 
 FROM american]]></db:sql>
 		</db:select>
-		<ee:transform doc:name="Transform Message" doc:id="f14726be-998b-49f9-9c31-87790fb98435">
-			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload map ( payload01 , indexOfPayload01 ) -> {
-	ID: payload01.ID,
-	code: (payload01.code1 default "") ++ (payload01.code2 default ""),
-	price: payload01.price default 0,
-	departureDate: payload01.takeOffDate as String default "",
-	origin: (payload01.fromAirport default "") ,
-	destination: payload01.toAirport default "",
-	emptySeats: payload01.seatsAvailable default 0,
-	plane: {
-		"type": payload01.planeType default "",
-		totalSeats: payload01.totalSeats default 0
-	}
-}]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
+	  <set-payload value="#[output application/json ---
+payload map (payload01 , indexOfPayload01 ) -> {
+    ID: payload01.ID,
+    code: (payload01.code1 default '') ++ (payload01.code2 default ''),
+    price: payload01.price default 0,
+    departureDate: payload01.takeOffDate as String default '',
+    origin: (payload01.fromAirport default ''),
+    destination: payload01.toAirport default '',
+    emptySeats: payload01.seatsAvailable default 0,
+    plane: {
+        'type': payload01.planeType default '',
+        totalSeats: payload01.totalSeats default 0
+    }
+}]"/>
+
 	</flow>
 	<flow name="getFlightsByID" doc:id="9b334b6b-eb65-424c-adb7-60607ccdb703" >
 	<set-variable variableName="flightID" value="#[vars.ID default attributes.uriParams.ID]" doc:name="Set flightID Variable"/>
@@ -50,25 +46,20 @@ FROM american
 WHERE ID= :flightID]]></db:sql>
 			 <db:input-parameters ><![CDATA[#[{'flightID' : vars.flightID}]]]></db:input-parameters>
 		</db:select>
-		<ee:transform doc:name="Transform Message" doc:id="f1cb004e-12e4-4251-97c2-ec7e89a19a4b" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-payload map ( payload01 , indexOfPayload01 ) -> {
-	ID: payload01.ID,
-	code: (payload01.code1 default "") ++ (payload01.code2 default ""),
-	price: payload01.price default 0,
-	departureDate: payload01.takeOffDate as String default "",
-	origin: (payload01.fromAirport default "") ,
-	destination: payload01.toAirport default "",
-	emptySeats: payload01.seatsAvailable default 0,
-	plane: {
-		"type": payload01.planeType default "",
-		totalSeats: payload01.totalSeats default 0
-	}
-}]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
+		  <set-payload value="#[output application/json ---
+payload map (payload01 , indexOfPayload01 ) -> {
+    ID: payload01.ID,
+    code: (payload01.code1 default '') ++ (payload01.code2 default ''),
+    price: payload01.price default 0,
+    departureDate: payload01.takeOffDate as String default '',
+    origin: (payload01.fromAirport default ''),
+    destination: payload01.toAirport default '',
+    emptySeats: payload01.seatsAvailable default 0,
+    plane: {
+        'type': payload01.planeType default '',
+        totalSeats: payload01.totalSeats default 0
+    }
+}]"/>
 	</flow>
 </mule>
+
