@@ -61,7 +61,19 @@ stages:
 unit-tests:
   stage: test
   script:
-      - mvn -s $CI_PROJECT_DIR/ci-settings.xml clean test | tee test.log 
+    - $OldJavaHome = $Env:JAVA_HOME  # Sauvegarder l'ancienne valeur de JAVA_HOME
+    - $OldPath = $Env:PATH  # Sauvegarder l'ancien PATH
+
+    - $Env:JAVA_HOME = "C:\openlogic-openjdk-8u402-b06-windows-64"
+    - $Env:PATH = "$Env:JAVA_HOME\bin;" + $OldPath  # Utiliser temporairement Java 8
+
+    - echo "Using Java 8 for unit tests"
+    - java -version
+    - mvn -s $CI_PROJECT_DIR\ci-settings.xml clean test | tee test.log
+
+    - $Env:JAVA_HOME = $OldJavaHome  # Restaurer JAVA_HOME après les tests
+    - $Env:PATH = $OldPath
+    - java -version
   artifacts:
     paths:
       - test.log
