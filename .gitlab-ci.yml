@@ -1,6 +1,8 @@
+
 include:
-  - project: 'fatmasamaali/TemplateYmlFinal'
-    file: '/.gitlab-ci-template.yml'
+  - project: $PROJECT_NAME
+    file: $FILE_PATH
+
 
 build:
   extends: .build_job
