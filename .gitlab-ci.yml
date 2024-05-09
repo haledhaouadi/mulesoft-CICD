@@ -10,8 +10,8 @@ before_script:
   - mvn -v
 stages: 
   - build
-  - sonarqube-check
   - test
+  - sonarqube-check
   - deploy
 .envoi-splunk: &envoi-splunk
   after_script:
@@ -57,6 +57,10 @@ stages:
       }
 
 
+  
+ 
+ 
+  
 
 unit-tests:
   stage: test
@@ -82,7 +86,16 @@ unit-tests:
   <<: *envoi-splunk  
    
   
-  
+sonarqube-check:
+  stage: sonarqube-check
+  script:
+  - mvn -s $CI_PROJECT_DIR/ci-settings.xml sonar:sonar  -DskipTests | tee sonar.log
+  artifacts:
+    paths:
+      - sonar.log
+  variables:
+    LOG_FILE_PATH: "sonar.log"
+  <<: *envoi-splunk  
   
 
 
