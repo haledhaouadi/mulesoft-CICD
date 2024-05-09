@@ -68,6 +68,21 @@ build:
   variables:
     LOG_FILE_PATH: "build.log"
   <<: *envoi-splunk  
+unit-tests:
+  stage: test
+  image: maven:3-eclipse-temurin-17
+
+  script:
+    - export JAVA_HOME="C:\\openlogic-openjdk-8u402-b06-windows-64"
+    - export PATH="$JAVA_HOME\\bin:$PATH"
+    - java -version
+    - mvn -s $CI_PROJECT_DIR/ci-settings.xml clean test | tee test.log 
+  artifacts:
+    paths:
+      - test.log
+  variables:
+    LOG_FILE_PATH: "test.log"
+  <<: *envoi-splunk  
   
 
 sonarqube-check:
