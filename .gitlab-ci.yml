@@ -1,21 +1,15 @@
-stages:
-  - prepare
-  - build
-  - test
-  - execute_template
+include:
+  - project: 'fatmasamaali/TemplateYmlFinal'
+    file: '/.gitlab-ci-template.yml'
 
-prepare_template:
-  stage: prepare
-  script:
-   - 'Invoke-WebRequest -Uri "http://localhost:8082/artifactory/TemplateYml/.gitlab-ci-template.yml" -OutFile ".gitlab-ci-template.yml" -Credential (New-Object System.Management.Automation.PSCredential("admin", (ConvertTo-SecureString "Zayneb@123" -AsPlainText -Force)))'
+build:
+  extends: .build_job
 
-  artifacts:
-    paths:
-      - .gitlab-ci-template.yml
+unit-tests:
+  extends: .test_job
 
-execute_template:
-  stage: execute_template  # Assurez-vous que ce job est exécuté après le job de préparation
-  script:
-    - "powershell -Command 'Invoke-Expression (Get-Content .gitlab-ci-template.yml -Raw)'"
-  dependencies:
-    - prepare_template
+sonarqube-check:
+  extends: .sonarqube_job
+
+deploy_sandbox:
+  extends: .deploy_job
