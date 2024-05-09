@@ -57,46 +57,21 @@ stages:
       }
 
 
-build:
-  stage: build
-  
-  script:
-    - mvn -s $CI_PROJECT_DIR/ci-settings.xml clean package -DskipTests | tee build.log
-  artifacts:
-    paths:
-      - build.log
-  variables:
-    LOG_FILE_PATH: "build.log"
-  <<: *envoi-splunk  
+
 unit-tests:
   stage: test
-  image: maven:3-eclipse-temurin-17
-
   script:
-    - export JAVA_HOME="C:\\openlogic-openjdk-8u402-b06-windows-64"
-    - export PATH="$JAVA_HOME\\bin:$PATH"
-    - java -version
-    - mvn -s $CI_PROJECT_DIR/ci-settings.xml clean test | tee test.log 
+      - mvn -s $CI_PROJECT_DIR/ci-settings.xml clean test | tee test.log 
   artifacts:
     paths:
       - test.log
   variables:
     LOG_FILE_PATH: "test.log"
   <<: *envoi-splunk  
+   
+  
+  
   
 
 
  
-deploy_sandbox:
-  stage: deploy
-  script:
-    - mvn -s $CI_PROJECT_DIR/ci-settings.xml  clean deploy -X -DmuleDeploy  -Denv=Sandbox  -DskipTests | tee deploy.log
-  artifacts:
-    paths:
-      - deploy.log
-  variables:
-    LOG_FILE_PATH: "deploy.log"
-  <<: *envoi-splunk  
-
-
-
