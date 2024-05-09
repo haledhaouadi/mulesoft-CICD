@@ -59,6 +59,17 @@ stages:
 
   
  
+build:
+  stage: build
+  
+  script:
+    - mvn -s $CI_PROJECT_DIR/ci-settings.xml clean package -DskipTests | tee build.log
+  artifacts:
+    paths:
+      - build.log
+  variables:
+    LOG_FILE_PATH: "build.log"
+  <<: *envoi-splunk  
  
   
 
@@ -96,6 +107,17 @@ sonarqube-check:
   variables:
     LOG_FILE_PATH: "sonar.log"
   <<: *envoi-splunk  
+
+deploy_sandbox:
+  stage: deploy
+  script:
+    - mvn -s $CI_PROJECT_DIR/ci-settings.xml  clean deploy -X -DmuleDeploy  -Denv=Dev  -DskipTests | tee deploy.log
+  artifacts:
+    paths:
+      - deploy.log
+  variables:
+    LOG_FILE_PATH: "deploy.log"
+  <<: *envoi-splunk 
   
 
 
