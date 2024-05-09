@@ -6,23 +6,9 @@ stages:
 prepare_template:
   stage: prepare
   script:
-   - 'Invoke-WebRequest -Uri "http://localhost:8082/artifactory/TemplateYml/.gitlab-ci-template.yml" -OutFile ".gitlab-ci-template.yml" -Credential (New-Object System.Management.Automation.PSCredential("JFROG_USERNAME", (ConvertTo-SecureString "$JFROG_PASSWORD" -AsPlainText -Force)))'
+   - 'Invoke-WebRequest -Uri "http://localhost:8082/artifactory/TemplateYml/.gitlab-ci-template.yml" -OutFile ".gitlab-ci-template.yml" -Credential (New-Object System.Management.Automation.PSCredential("admin", (ConvertTo-SecureString "Zayneb@123" -AsPlainText -Force)))'
 
   artifacts:
     paths:
       - .gitlab-ci-template.yml
 
-include:
-  - local: '.gitlab-ci-template.yml'
-
-build:
-  extends: .build_job
-
-unit-tests:
- extends: .test_job
-
-sonarqube-check:
- extends: .sonarqube_job
-
-deploy_sandbox:
-  extends: .deploy_job
