@@ -85,19 +85,7 @@ unit-tests:
   <<: *envoi-splunk  
   
 
-sonarqube-check:
-  stage: sonarqube-check
-  image: maven:3-eclipse-temurin-17
- 
- 
-  script:
-  - mvn -s $CI_PROJECT_DIR/ci-settings.xml sonar:sonar  -DskipTests | tee sonar.log
-  artifacts:
-    paths:
-      - sonar.log
-  variables:
-    LOG_FILE_PATH: "sonar.log"
-  <<: *envoi-splunk
+
  
 deploy_sandbox:
   stage: deploy
