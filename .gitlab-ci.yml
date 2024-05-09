@@ -1,124 +1,28 @@
-
-variables:
-  MAVEN_HOME: 'C:\\Users\\HP\\Downloads\\apache-maven-3.9.6'
-
-
-before_script:
-  - echo "Checking Maven and Java"
-  - $Env:PATH = "$Env:MAVEN_HOME\bin;" + $Env:PATH
-  - echo $Env:PATH
-  - mvn -v
-stages: 
+stages:
+  - prepare
   - build
   - test
-  - sonarqube-check
-  - deploy
-.envoi-splunk: &envoi-splunk
-  after_script:
-    - |
-      if ($CI_JOB_STATUS -eq "failed") {
-        $errorExceptionLogs = Get-Content $env:LOG_FILE_PATH | Select-String -Pattern "^\[ERROR\].*Exception:" | ForEach-Object { $_.Line }
-        $errorFailedLogs = Get-Content $env:LOG_FILE_PATH | Select-String -Pattern "^\[ERROR\] Failed to execute goal" | ForEach-Object { $_.Line }
-        $allErrorLogs = $errorFailedLogs + $errorExceptionLogs
-        $message = $allErrorLogs -join "`n"
 
-        $body = @{
-          sourcetype = "_json"
-          event = @{
-            errorlogs = $message
-            repository = $CI_PROJECT_NAME
-            runner = $CI_RUNNER_ID
-            branch = $CI_COMMIT_REF_NAME
-            stage = "$CI_JOB_STAGE"
-            status = "$CI_JOB_STATUS"
-          }
-        } | ConvertTo-Json -Compress
-        $headers = @{
-          "Authorization" = "Splunk $SPLUNK_HEC_TOKEN"
-        }
-        [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
-        Invoke-RestMethod -Uri $SPLUNK_HEC_ENDPOINT -Method Post -Body $body -Headers $headers -ContentType 'application/json'
-      }
-      else {
-        $body = @{
-          sourcetype = "_json"
-          event = @{
-            repository = $CI_PROJECT_NAME
-            branch = $CI_COMMIT_REF_NAME
-            stage = "$CI_JOB_STAGE"
-            status = "$CI_JOB_STATUS"
-          }
-        } | ConvertTo-Json -Compress
-        $headers = @{
-          "Authorization" = "Splunk $SPLUNK_HEC_TOKEN"
-        }
-        [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
-        Invoke-RestMethod -Uri $SPLUNK_HEC_ENDPOINT -Method Post -Body $body -Headers $headers -ContentType 'application/json'
-      }
-
-
-  
- 
-build:
-  stage: build
-  
+prepare_template:
+  stage: prepare
   script:
-    - mvn -s $CI_PROJECT_DIR/ci-settings.xml clean package -DskipTests | tee build.log
+   - 'Invoke-WebRequest -Uri "http://localhost:8082/artifactory/TemplateYml/.gitlab-ci-template.yml" -OutFile ".gitlab-ci-template.yml" -Credential (New-Object System.Management.Automation.PSCredential("JFROG_USERNAME", (ConvertTo-SecureString "$JFROG_PASSWORD" -AsPlainText -Force)))'
+
   artifacts:
     paths:
-      - build.log
-  variables:
-    LOG_FILE_PATH: "build.log"
-  <<: *envoi-splunk  
- 
-  
+      - .gitlab-ci-template.yml
+
+include:
+  - local: '.gitlab-ci-template.yml'
+
+build:
+  extends: .build_job
 
 unit-tests:
-  stage: test
-  script:
-    - $OldJavaHome = $Env:JAVA_HOME  # Sauvegarder l'ancienne valeur de JAVA_HOME
-    - $OldPath = $Env:PATH  # Sauvegarder l'ancien PATH
+ extends: .test_job
 
-    - $Env:JAVA_HOME = "C:\openlogic-openjdk-8u402-b06-windows-64"
-    - $Env:PATH = "$Env:JAVA_HOME\bin;" + $OldPath  # Utiliser temporairement Java 8
-
-    - echo "Using Java 8 for unit tests"
-    - java -version
-    - mvn -s $CI_PROJECT_DIR\ci-settings.xml clean test | tee test.log
-
-    - $Env:JAVA_HOME = $OldJavaHome  # Restaurer JAVA_HOME après les tests
-    - $Env:PATH = $OldPath
-    - java -version
-  artifacts:
-    paths:
-      - test.log
-  variables:
-    LOG_FILE_PATH: "test.log"
-  <<: *envoi-splunk  
-   
-  
 sonarqube-check:
-  stage: sonarqube-check
-  script:
-  - mvn -s $CI_PROJECT_DIR/ci-settings.xml sonar:sonar  -DskipTests | tee sonar.log
-  artifacts:
-    paths:
-      - sonar.log
-  variables:
-    LOG_FILE_PATH: "sonar.log"
-  <<: *envoi-splunk  
+ extends: .sonarqube_job
 
 deploy_sandbox:
-  stage: deploy
-  script:
-    - mvn -s $CI_PROJECT_DIR/ci-settings.xml  clean deploy -X -DmuleDeploy  -Denv=Dev  -DskipTests | tee deploy.log
-  artifacts:
-    paths:
-      - deploy.log
-  variables:
-    LOG_FILE_PATH: "deploy.log"
-  <<: *envoi-splunk 
-  
-
-
- 
+  extends: .deploy_job
