@@ -1,5 +1,13 @@
 
+variables:
+  MAVEN_HOME: 'C:\\Users\\HP\\Downloads\\apache-maven-3.9.6'
 
+
+before_script:
+  - echo "Checking Maven and Java"
+  - $Env:PATH = "$Env:MAVEN_HOME\bin;" + $Env:PATH
+  - echo $Env:PATH
+  - mvn -v
 stages: 
   - build
   - sonarqube-check
