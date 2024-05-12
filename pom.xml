@@ -28,6 +28,7 @@
 	</properties>
 
 	<build>
+		 <finalName>${project.artifactId}-${project.version}${packageScope}</finalName>
 		<plugins>
 			
 			<plugin>
