@@ -13,5 +13,16 @@ unit-tests:
 sonarqube-check:
   extends: .sonarqube_job
 
-deploy_sandbox:
-  extends: .deploy_job
+deploy_Dev:
+  extends: .deploy_develop
+  only:
+    - Develop
+deploy_Staging:
+  extends: .deploy_Staging
+  only:
+    - Staging
+deploy_Product:
+  extends: .deploy_Product
+  only:
+    - main   
+
