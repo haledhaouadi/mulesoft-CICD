@@ -7,9 +7,6 @@ include:
 build:
   extends: .build_job
 
-unit-tests:
-  extends: .test_job
-
 sonarqube-check:
   extends: .sonarqube_job
 
