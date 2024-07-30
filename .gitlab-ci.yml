@@ -2,10 +2,17 @@
 include:
   - project: $PROJECT_NAME
     file: $FILE_PATH  
+stages:
+  - build
+  - test
+  - sonarqube-check
+  - deploy
 
 
 build:
-  extends: .build_job
+  stage: build
+  script:
+    - mvn -s $CI_PROJECT_DIR/ci-settings.xml clean package -DskipTests 
 
 sonarqube-check:
   extends: .sonarqube_job
