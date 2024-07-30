@@ -1,20 +1,13 @@
-image: maven:3.8.6-jdk-11 
+
 
 include:
   - project: $PROJECT_NAME
     file: $FILE_PATH  
      
-stages:
-  - build
-  - test
-  - sonarqube-check
-  - deploy
 
 
 build:
-  stage: build
-  script:
-    - mvn -s $CI_PROJECT_DIR/ci-settings.xml clean package -DskipTests 
+  extends: .build_job
 
 sonarqube-check:
   extends: .sonarqube_job
