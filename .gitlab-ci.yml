@@ -13,7 +13,7 @@ stages:
 build:
   stage: build
   script:
-    - mvn -s $CI_PROJECT_DIR/ci-settings.xml clean package -DskipTests 
+    - C:\apache-maven-3.9.8\bin -s $CI_PROJECT_DIR/ci-settings.xml clean package -DskipTests 
 
 sonarqube-check:
   extends: .sonarqube_job
