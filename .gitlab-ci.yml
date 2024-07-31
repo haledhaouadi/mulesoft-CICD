@@ -1,31 +1,24 @@
-stages:
-  - build
-  # Add other stages as needed
+include:
+  - project: $PROJECT_NAME
+    file: $FILE_PATH  
+     
 
-build-with-maven:
-  stage: build
-  script:
-    - mvn clean install
-  tags:
-    - docker-runner
-  except:
-    - branches
 
-run-powershell-script:
-  stage: build
-  script:
-    - powershell.exe .\scripts\my_script.ps1
-  tags:
-    - docker-runner
-  except:
-    - branches
+build:
+  extends: .build_job
 
-# Define other jobs as needed
+sonarqube-check:
+  extends: .sonarqube_job
 
-after_script:
-  - >
-    powershell.exe -Command "
-      if (\$CI_JOB_STATUS -eq \"failed\") {
-        # Your failure handling logic here
-      }
-    "
+deploy_Dev:
+  extends: .deploy_develop
+  only:
+    - Develop
+deploy_Staging:
+  extends: .deploy_Staging
+  only:
+    - Staging
+deploy_Product:
+  extends: .deploy_Product
+  only:
+    - main
