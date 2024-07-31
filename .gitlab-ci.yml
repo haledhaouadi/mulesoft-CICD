@@ -1,10 +1,24 @@
-stages:
-  - test
+include:
+  - project: $PROJECT_NAME
+    file: $FILE_PATH  
+     
 
-test_job:
-  stage: test
-  image: registry.gitlab.com/fatmasamaali/pipe/my-powershell-maven-image
-  script:
-    - echo "Hello, GitLab Runner!"
-    - mvn --version
-    - pwsh -Command "Write-Output 'PowerShell is working!'"
+
+build:
+  extends: .build_job
+
+sonarqube-check:
+  extends: .sonarqube_job
+
+deploy_Dev:
+  extends: .deploy_develop
+  only:
+    - Develop
+deploy_Staging:
+  extends: .deploy_Staging
+  only:
+    - Staging
+deploy_Product:
+  extends: .deploy_Product
+  only:
+    - main
