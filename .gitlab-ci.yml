@@ -1,33 +1,24 @@
-image: docker:latest
+include:
+  - project: $PROJECT_NAME
+    file: $FILE_PATH  
+     
 
-services:
-  - docker:dind
 
-variables:
-  DOCKER_DRIVER: overlay2
+build:
+  extends: .build_job
 
-stages:
-  - build
-  - package
-  - deploy
+sonarqube-check:
+  extends: .sonarqube_job
 
-maven-build:
-  stage: build
-  script: "mvn package -B"
-  artifacts:
-    paths:
-      - target/*.jar
-
-docker-build:
-  stage: package
-  script:
-    - docker build -t registry.gitlab.com/yourproject/yourimage .
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
-    - docker push registry.gitlab.com/yourproject/yourimage
-
-docker-deploy:
-  stage: deploy
-  script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
-    - docker pull registry.gitlab.com/yourproject/yourimage
-    - docker run -itd --name test -p 9090:8080 registry.gitlab.com/yourproject/yourimage sh
+deploy_Dev:
+  extends: .deploy_develop
+  only:
+    - Develop
+deploy_Staging:
+  extends: .deploy_Staging
+  only:
+    - Staging
+deploy_Product:
+  extends: .deploy_Product
+  only:
+    - main
