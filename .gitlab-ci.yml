@@ -1,24 +1,10 @@
-include:
-  - project: $PROJECT_NAME
-    file: $FILE_PATH  
-     
 
-
+stages:
+  - build
+  - test
+  - sonarqube-check
+  - deploy
 build:
-  extends: .build_job
-
-sonarqube-check:
-  extends: .sonarqube_job
-
-deploy_Dev:
-  extends: .deploy_develop
-  only:
-    - Develop
-deploy_Staging:
-  extends: .deploy_Staging
-  only:
-    - Staging
-deploy_Product:
-  extends: .deploy_Product
-  only:
-    - main
+  stage: build
+  script:
+    - mvn clean package -DskipTests
