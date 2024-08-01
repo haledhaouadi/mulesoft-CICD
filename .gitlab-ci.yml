@@ -1,9 +1,17 @@
 image: maven:latest
+
 stages:
   - build
   - test
   - sonarqube-check
   - deploy
+
+before_script:
+  - echo "Configuring Maven..."
+  - echo "<settings><mirrors><mirror><id>central</id><mirrorOf>*</mirrorOf><url>https://repo.maven.apache.org/maven2</url></mirror></mirrors></settings>" > /root/.m2/settings.xml
+  - mvn --version
+  - echo "Maven configuration completed."
+
 build:
   stage: build
   script:
