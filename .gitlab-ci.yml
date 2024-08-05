@@ -1,24 +1,55 @@
 include:
   - project: $PROJECT_NAME
-    file: $FILE_PATH  
-     
+    file: $FILE_PATH
 
+stages:
+  - build
+  - test
+  - sonarqube-check
+  - deploy
 
 build:
-  extends: .build_job
+  stage: build
+  image: docker:latest
+  services:
+    - name: docker:dind
+      command: ["--host=tcp://172.17.0.2:2375"]
+  variables:
+    DOCKER_HOST: tcp://172.17.0.2:2375
+    DOCKER_TLS_CERTDIR: ""
+    MAVEN_CLI_OPTS: "-s $CI_PROJECT_DIR/ci-settings.xml"
+    LOG_FILE_PATH: "build.log"
+  script:
+    - |
+      if [[ "$CI_COMMIT_REF_NAME" =~ ^release/ ]]; then
+        mvn -s "$CI_PROJECT_DIR/ci-settings.xml" clean package -DpackageScope="${CI_PIPELINE_ID}_RELEASE" -DskipTests | tee build.log
+      elif [[ "$CI_COMMIT_REF_NAME" == "Develop" ]] || [[ "$CI_COMMIT_REF_NAME" == "hotfix" ]]; then
+        mvn -s "$CI_PROJECT_DIR/ci-settings.xml" clean package -DpackageScope="${CI_PIPELINE_ID}_DRAFT" -DskipTests | tee build.log
+      else
+        mvn -s "$CI_PROJECT_DIR/ci-settings.xml" clean package -DpackageScope="${CI_PIPELINE_ID}_BUILD_Ordinaire" -DskipTests | tee build.log
+  artifacts:
+    paths:
+      - build.log
+  <<: *envoi-splunk
 
 sonarqube-check:
+  stage: sonarqube-check
   extends: .sonarqube_job
 
 deploy_Dev:
+  stage: deploy
   extends: .deploy_develop
   only:
     - Develop
+
 deploy_Staging:
+  stage: deploy
   extends: .deploy_Staging
   only:
     - Staging
+
 deploy_Product:
+  stage: deploy
   extends: .deploy_Product
   only:
     - main
