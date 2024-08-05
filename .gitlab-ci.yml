@@ -30,7 +30,7 @@ build:
   artifacts:
     paths:
       - build.log
-  <<: *envoi-splunk
+ 
 
 sonarqube-check:
   stage: sonarqube-check
