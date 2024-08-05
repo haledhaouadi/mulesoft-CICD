@@ -1,19 +1,24 @@
-image: maven:latest
+include:
+  - project: $PROJECT_NAME
+    file: $FILE_PATH  
+     
 
-stages:
-  - build
-  - test
-  - sonarqube-check
-  - deploy
-
-before_script:
-  - echo "Configuring Maven..."
-  - mkdir -p ~/.m2
-  - echo "<settings><mirrors><mirror><id>central</id><mirrorOf>*</mirrorOf><url>https://repo.maven.apache.org/maven2</url></mirror></mirrors></settings>" > ~/.m2/settings.xml
-  - mvn --version
-  - echo "Maven configuration completed."
 
 build:
-  stage: build
-  script:
-    - mvn clean package -DskipTests
+  extends: .build_job
+
+sonarqube-check:
+  extends: .sonarqube_job
+
+deploy_Dev:
+  extends: .deploy_develop
+  only:
+    - Develop
+deploy_Staging:
+  extends: .deploy_Staging
+  only:
+    - Staging
+deploy_Product:
+  extends: .deploy_Product
+  only:
+    - main
