@@ -23,7 +23,7 @@
 		<mule.maven.plugin.version>4.0.0</mule.maven.plugin.version>
 		<munit.version>3.0.0</munit.version>
 		<sonar.projectKey>fatmasamaali_pipe_e2c45fac-0926-4dcc-a067-ecc09c9527fd</sonar.projectKey>
-  <sonar.projectName>pipe</sonar.projectName>
+  <sonar.projectName>pipeline</sonar.projectName>
   
 
 	</properties>
