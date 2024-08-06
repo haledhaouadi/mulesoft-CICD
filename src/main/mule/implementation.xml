@@ -34,6 +34,7 @@ payload map (payload01 , indexOfPayload01 ) -> {
         'type': payload01.planeType default '',
         totalSeats: payload01.totalSeats default 0
     }
+
 }]"/>
 
 	</flow>
