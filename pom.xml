@@ -8,13 +8,13 @@
 	<packaging>mule-application</packaging>
 
 	<name>train</name>
-<parent>
+<!-- <parent>
 	
    <groupId>com.mycompany</groupId>
 	<artifactId>parentpom</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
   <relativePath></relativePath>
-</parent>
+</parent> -->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -22,9 +22,9 @@
 		<app.runtime>4.6.0</app.runtime>
 		<mule.maven.plugin.version>4.0.0</mule.maven.plugin.version>
 		<munit.version>3.0.0</munit.version>
-		<sonar.projectKey>fatmasamaali_pipe_e2c45fac-0926-4dcc-a067-ecc09c9527fd</sonar.projectKey>
+<!-- 		<sonar.projectKey>fatmasamaali_pipe_e2c45fac-0926-4dcc-a067-ecc09c9527fd</sonar.projectKey>
   <sonar.projectName>pippe</sonar.projectName>
-  
+   -->
 
 	</properties>
 
@@ -38,13 +38,13 @@
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
-				<cloudHubDeployment>
+<!-- 				<cloudHubDeployment>
 						
 						
 						<applicationName>${project.artifactId}</applicationName>
 						
 					</cloudHubDeployment>
-				
+				 -->
 					<sharedLibraries>
 						<sharedLibrary>
 							<groupId>mysql</groupId>
