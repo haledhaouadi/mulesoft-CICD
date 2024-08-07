@@ -1,5 +1,6 @@
 pipeline {
     agent any
+    tools { maven 'maven-3.6.3' } // Specify the version of Maven you want to use
     stages {
         stage('Checkout') {
             steps {
@@ -11,11 +12,11 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'mvn clean package'
+                    sh "${tool 'maven-3.6.3'}/bin/mvn clean package"
                 }
             }
         }
-      
     }
 }
+
 
