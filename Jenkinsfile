@@ -1,6 +1,9 @@
 pipeline {
     agent any
-    tools { maven 'maven' } // Specify the version of Maven you want to use
+    tools { 
+        maven 'maven'
+        jdk 'Java-8' 
+    }
     stages {
         stage('Checkout') {
             steps {
