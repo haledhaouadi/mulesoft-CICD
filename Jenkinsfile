@@ -13,12 +13,15 @@ pipeline {
         }
         stage('Build') {
             steps {
-                script {
-                    sh "${tool 'maven'}/bin/mvn clean package"
+                dir('project') { // Navigate to the 'project' directory
+                    script {
+                        sh "${tool 'maven'}/bin/mvn clean package -e -X"
+                    }
                 }
             }
         }
     }
 }
+
 
 
