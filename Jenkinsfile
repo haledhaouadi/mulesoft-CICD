@@ -3,6 +3,9 @@ pipeline {
     tools {
         maven 'maven' // Specify the version of Maven you want to use
     }
+    environment {
+        MAVEN_OPTS = '--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED'
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -34,4 +37,3 @@ pipeline {
         }
     }
 }
-
