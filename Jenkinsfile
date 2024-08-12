@@ -4,7 +4,7 @@ pipeline {
         maven 'maven' // Specify the version of Maven you want to use
     }
     environment {
-        SPLUNK_HEC_URL = 'http://192.168.1.20:8088'
+        SPLUNK_HEC_URL = 'http://192.168.1.20:8000'
         SPLUNK_HEC_TOKEN = 'e6e678e9-29ae-4731-a960-4a0807a2e4a1'
     }
     stages {
