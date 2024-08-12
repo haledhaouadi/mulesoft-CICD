@@ -5,7 +5,7 @@ pipeline {
     }
     environment {
         SPLUNK_HEC_URL = 'http://localhost:8088' // Corrected port to 8088
-        SPLUNK_HEC_TOKEN = 'ab2d52f7-3947-4527-a411-33f17c6414'
+        SPLUNK_HEC_TOKEN = 'e6e678e9-29ae-4731-a960-4a0807a2e4a1'
     }
     stages {
         stage('Checkout') {
