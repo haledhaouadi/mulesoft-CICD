@@ -23,9 +23,7 @@ pipeline {
                         echo buildOutput
 
                         // Properly formatted and escaped JSON payload
-                        def jsonPayload = """{
-                            \\"event\\": \\"Build logs: ${buildOutput.replaceAll('"', '\\\\\\"')}\\" 
-                        }"""
+                        def jsonPayload = """{"event":"Build logs: ${buildOutput.replaceAll('"', '\"')}"}"""
 
                         sh(script: """
                         curl -k "${env.SPLUNK_HEC_URL}/services/collector" \
@@ -38,4 +36,3 @@ pipeline {
         }
     }
 }
-
