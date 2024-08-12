@@ -18,7 +18,21 @@
 	</properties>
 
 	<build>
-		<plugins>
+		<plugins> 
+			<plugin>
+				<groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
+				<artifactId>sonar-packaging-maven-plugin</artifactId>
+				<version>1.17</version>
+				<extensions>true</extensions>
+				<configuration>
+					<!-- the entry-point class that extends org.sonar.api.SonarPlugin -->
+					<pluginClass>com.mulesoft.services.tools.sonarqube.MulePlugin</pluginClass>
+					<pluginName>MulePlugin</pluginName>
+					<pluginKey>mulevalidationsonarqubeplugin-mule</pluginKey>
+					<!-- advanced properties can be set here. See paragraph "Advanced Build
+						Properties". -->
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
