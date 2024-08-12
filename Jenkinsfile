@@ -21,6 +21,17 @@ pipeline {
                 }
             }
         }
+        stage('SonarQube Check') {
+            steps {
+                dir('project') { // Assuming the project directory contains the pom.xml file needed for SonarQube analysis
+                    script {
+                        // Execute SonarQube analysis
+                        def sonarOutput = sh(script: "${tool 'maven'}/bin/mvn sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.sources=./src", returnStdout: true).trim()
+                        echo "SonarQube Analysis Output:\n${sonarOutput}"
+                    }
+                }
+            }
+        }
     }
 }
 
