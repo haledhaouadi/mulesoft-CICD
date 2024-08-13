@@ -29,7 +29,7 @@ pipeline {
                 dir('project') { // Assuming the project directory contains the pom.xml file needed for SonarQube analysis
                     script {
                         // Execute SonarQube analysis
-                        def sonarOutput = sh(script: "${tool 'maven'}/bin/mvn sonar:sonar -Dsonar.host.url=http://192.168.1.20:9000 -Dsonar.sources=./src", returnStdout: true).trim()
+                        def sonarOutput = sh(script: "${tool 'maven'}/bin/mvn sonar:sonar -Dsonar.host.url=http://192.168.1.118:9000 -Dsonar.sources=./src", returnStdout: true).trim()
                         echo "SonarQube Analysis Output:\n${sonarOutput}"
                     }
                 }
