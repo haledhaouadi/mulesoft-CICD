@@ -28,7 +28,7 @@ pipeline {
             steps {
                 dir('project') {
                     script {
-                        def sonarOutput = sh(script: "${tool 'maven'}/bin/mvn sonar:sonar -Dsonar.host.url=http://192.168.1.118/:9000 -Dsonar.sources=./src", returnStdout: true).trim()
+                        def sonarOutput = sh(script: "${tool 'maven'}/bin/mvn sonar:sonar -Dsonar.host.url=http://192.168.1.118:9000 -Dsonar.sources=./src", returnStdout: true).trim()
                         echo "SonarQube Analysis Output:\n${sonarOutput}"
                     }
                 }
