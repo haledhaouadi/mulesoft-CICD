@@ -30,10 +30,10 @@
                     <cloudHubDeployment>
                         <uri>https://anypoint.mulesoft.com/</uri>
                         <muleVersion>4.7.0</muleVersion>
-                        <username>haladhaouadi</username>
-                        <password>13022002Hala</password>
+                        <username>Feriel</username>
+                        <password>Feriel123**</password>
                         <applicationName>my-mule-project</applicationName>
-                        <businessGroup>IT-MMA</businessGroup>
+                        <businessGroup>ITMMA</businessGroup>
                         <environment>Sandbox</environment>
                         <workers>1</workers>
                         <objectStoreV2>true</objectStoreV2>
