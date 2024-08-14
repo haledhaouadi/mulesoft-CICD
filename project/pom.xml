@@ -33,7 +33,7 @@
                         <username>haladhaouadi</username>
                         <password>13022002Hala</password>
                         <applicationName>my-mule-project</applicationName>
-                        <businessGroup>ITMMA</businessGroup>
+                        <businessGroup>IT-MMA</businessGroup>
                         <environment>Sandbox</environment>
                         <workers>1</workers>
                         <objectStoreV2>true</objectStoreV2>
