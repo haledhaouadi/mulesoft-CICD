@@ -30,7 +30,7 @@
                     <cloudHubDeployment>
                         <uri>https://anypoint.mulesoft.com/</uri>
                         <muleVersion>4.7.0</muleVersion>
-                        <username>hala dhaouadi</username>
+                        <username>haladhaouadi</username>
                         <password>13022002Hala</password>
                         <applicationName>my-mule-project</applicationName>
                         <businessGroup>IT-MMA</businessGroup>
