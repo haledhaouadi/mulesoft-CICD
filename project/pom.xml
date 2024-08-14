@@ -34,7 +34,7 @@
                         <password>13022002Hala</password>
                         <applicationName>my-mule-project</applicationName>
                         <businessGroup>IT-MMA</businessGroup>
-                        <environment>SANDBOX</environment>
+                        <environment>Sandbox</environment>
                         <workers>1</workers>
                         <objectStoreV2>true</objectStoreV2>
                     </cloudHubDeployment>
