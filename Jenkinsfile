@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                dir('project') { // Navigate to the 'project' directory
+                dir('project') {
                     script {
                         def buildOutput = sh(script: "${tool 'maven'}/bin/mvn clean package -e -X", returnStdout: true).trim()
                         echo buildOutput
@@ -26,14 +26,26 @@ pipeline {
         }
         stage('SonarQube Check') {
             steps {
-                dir('project') { // Assuming the project directory contains the pom.xml file needed for SonarQube analysis
+                dir('project') {
                     script {
-                        // Execute SonarQube analysis
-                        def sonarOutput = sh(script: "${tool 'maven'}/bin/mvn sonar:sonar -Dsonar.host.url=http://192.168.1.118:9000 -Dsonar.sources=./src", returnStdout: true).trim()
+                        def sonarOutput = sh(script: "${tool 'maven'}/bin/mvn sonar:sonar -Dsonar.host.url=http://192.168.1.118/:9000 -Dsonar.sources=./src", returnStdout: true).trim()
                         echo "SonarQube Analysis Output:\n${sonarOutput}"
+                    }
+                }
+            }
+        }
+        stage('Deploy to CloudHub') {
+            steps {
+                dir('project') {
+                    script {
+                        withCredentials([usernamePassword(credentialsId: 'cloudhub-credentials', usernameVariable: 'ANYPOINT_USERNAME', passwordVariable: 'ANYPOINT_PASSWORD')]) {
+                            def deployOutput = sh(script: "${tool 'maven'}/bin/mvn mule:deploy -Danypoint.username=${env.ANYPOINT_USERNAME} -Danypoint.password=${env.ANYPOINT_PASSWORD} -DmuleDeploy.target=cloudhub", returnStdout: true).trim()
+                            echo "Deployment Output:\n${deployOutput}"
+                        }
                     }
                 }
             }
         }
     }
 }
+
