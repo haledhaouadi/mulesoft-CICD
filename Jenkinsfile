@@ -34,18 +34,15 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to CloudHub') {
+        stage('Deploy To CloudHub') {
             steps {
-                dir('project') {
-                    script {
-                        withCredentials([usernamePassword(credentialsId: 'cloudhub-credentials', usernameVariable: 'haladhaouadi', passwordVariable: '13022002Hala')]) {
-                            def deployOutput = sh(script: "${tool 'maven'}/bin/mvn mule:deploy -Danypoint.username=${env.ANYPOINT_USERNAME} -Danypoint.password=${env.ANYPOINT_PASSWORD} -DmuleDeploy.target=cloudhub", returnStdout: true).trim()
-                            echo "Deployment Output:\n${deployOutput}"
-                        }
+                dir('project'){
+                    script{
+                         sh 'mvn -X deploy -DmuleDeploy -DskipTests'
                     }
-                }
+               
+                 }
             }
-        }
     }
 }
 
