@@ -17,7 +17,28 @@
 		<mule.maven.plugin.version>4.2.0</mule.maven.plugin.version>
 	</properties>
 
-	<build>
+	<build> 
+		<plugin>
+    <groupId>org.mule.tools.maven</groupId>
+    <artifactId>mule-maven-plugin</artifactId>
+    <version>3.3.5</version>
+    <configuration>
+        <anypointPlatform>
+            <username>${anypoint.username}</username>
+            <password>${anypoint.password}</password>
+            <env>Sandbox</env> <!-- Use Sandbox, Production, etc. -->
+            <businessGroup>
+                <organization>${org.name}</organization>
+            </businessGroup>
+        </anypointPlatform>
+        <cloudHubDeployment>
+            <workerType>Micro</workerType> <!-- Change as needed -->
+            <workers>1</workers>
+            <region>us-east-1</region> <!-- AWS Region for CloudHub -->
+        </cloudHubDeployment>
+    </configuration>
+</plugin>
+
 		<plugins> 
 			<plugin>
 				<groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
